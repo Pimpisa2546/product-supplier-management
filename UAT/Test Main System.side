@@ -10,7 +10,7 @@
       "id": "e60b8707-5299-48ea-b3ef-aa541df8d43b",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/",
+      "target": "https://product-supplier-management-three.vercel.app/",
       "targets": [],
       "value": ""
     }, {
@@ -114,7 +114,7 @@
       "id": "5c97e8d5-a69a-44e1-8f21-9b28071c6991",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/",
+      "target": "https://product-supplier-management-three.vercel.app/",
       "targets": [],
       "value": ""
     }, {
@@ -212,7 +212,7 @@
       "id": "e4999161-2707-4d89-b24c-ccd2077ebc04",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -440,7 +440,7 @@
       "id": "f2f6f8cd-4dd5-4c48-998b-182285bed35d",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -472,7 +472,7 @@
       "id": "672fb0e9-e743-4f13-99bc-6d0a9955278b",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -603,7 +603,7 @@
       "id": "cd1316b7-e79b-458c-9105-7ccbc93f7b24",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -663,7 +663,7 @@
       "id": "ad501cdc-994b-42ee-b7a9-5ea3c0224899",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -718,7 +718,7 @@
       "id": "471a2d52-89a6-4c36-9ced-d003583aae23",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/products",
+      "target": "https://product-supplier-management-three.vercel.app/products",
       "targets": [],
       "value": ""
     }, {
@@ -794,7 +794,7 @@
       "id": "38ff69b7-093f-4e72-a529-ffdbf4a428e5",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/suppliers",
+      "target": "https://product-supplier-management-three.vercel.app/suppliers",
       "targets": [],
       "value": ""
     }, {
@@ -882,7 +882,7 @@
       "id": "80ff8138-4e24-42bc-80f7-fe59ef321c98",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/suppliers",
+      "target": "https://product-supplier-management-three.vercel.app/suppliers",
       "targets": [],
       "value": ""
     }, {
@@ -1122,7 +1122,7 @@
       "id": "73a278a5-329b-4d59-a524-62aa6d76133e",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/suppliers",
+      "target": "https://product-supplier-management-three.vercel.app/suppliers",
       "targets": [],
       "value": ""
     }, {
@@ -1209,7 +1209,7 @@
       "id": "cd1dfaf8-807d-4ad8-8cd8-1e2c43990fab",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/suppliers",
+      "target": "https://product-supplier-management-three.vercel.app/suppliers",
       "targets": [],
       "value": ""
     }, {
@@ -1277,7 +1277,7 @@
       "id": "0b4e7476-666f-426f-8a91-ea0cd408efc8",
       "comment": "",
       "command": "open",
-      "target": "http://localhost:5173/suppliers",
+      "target": "https://product-supplier-management-three.vercel.app/suppliers",
       "targets": [],
       "value": ""
     }, {
@@ -1348,6 +1348,6 @@
     "timeout": 300,
     "tests": ["3f98af62-74c4-4ddb-8a14-996e220dd58d", "9a748283-91e2-4628-9976-2237f41b898a", "25b09bf7-b5c0-4cf2-821f-9122a61d3c97", "3fe4d803-9b2b-4c08-948d-6ba64335d8b1", "b93c910a-8f08-4075-9f1f-1131082d6a49", "6f4e8ee8-fea5-4061-8743-1d6e7768f248", "5446c094-fb25-494a-9cf3-c63d54526a09", "0b62e5a0-42b6-4d44-bd9a-47336bbb9f12", "7886e266-4e14-47ff-a13a-5257c2e6a58c", "41d1ad29-9643-4b7e-9a20-ee80c0cc0156", "cb5564c0-e1eb-46aa-8058-3f5a9c89573b", "df1f1df3-5507-446b-a0b9-dad94c48fc8c", "69f3dcb8-a48d-4e67-9963-e9c5b12aa50c"]
   }],
-  "urls": ["http://localhost:5173/", "http://localhost:5173/products", "http://localhost:5173/suppliers"],
+  "urls": ["http://localhost:5173/", "http://localhost:5173/products", "http://localhost:5173/suppliers", "https://product-supplier-management-three.vercel.app/"],
   "plugins": []
 }
