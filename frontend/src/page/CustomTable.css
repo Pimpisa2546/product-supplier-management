@@ -1,0 +1,10 @@
+.customTable .ant-table-container .ant-table-body,
+.customTable .ant-table-container .ant-table-content {
+  scrollbar-width: thin;
+  scrollbar-color: #eaeaea transparent;
+}
+
+.customTable .ant-table-thead > tr > th {
+  background-color: #cfd0e1 !important;
+  font-weight: 600;
+}
