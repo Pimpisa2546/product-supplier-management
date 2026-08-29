@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductTable from "./page/ProductTable";
 import SupplierPage from "./page/Supplier";
 import Login from "./page/login";
-import ProtectedRoute from "./layout/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App: React.FC = () => {
   return (

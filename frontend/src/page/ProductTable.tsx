@@ -3,16 +3,16 @@ import {
   Table, Grid, Tag, Space, Button, Modal, Form, InputNumber, Input, 
   Select, Popconfirm, Avatar, Upload, Layout, theme, Tabs, List, Typography, Card 
 } from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, SettingOutlined, WarningOutlined, RocketOutlined, CheckOutlined, CloseOutlined, SearchOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined, SettingOutlined, WarningOutlined, RocketOutlined, CheckOutlined, CloseOutlined, SearchOutlined, UpOutlined, DownOutlined, EyeOutlined } from '@ant-design/icons';
 import { Category, Product } from '../interfaces/allInterface';
 import TextArea from 'antd/es/input/TextArea';
 import ImgCrop from 'antd-img-crop';
 import useProductManager from "../customLogic/productAndData";
 import { Content } from 'antd/es/layout/layout';
-import { AppSider } from '../layout/AppSider';
+import { AppSider } from '../components/AppSider';
 import "../page/CustomTable.css";
 import type { ColumnsType } from 'antd/es/table';
-import HeaderPage from '../layout/HeaderPage';
+import HeaderPage from '../components/HeaderPage';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -150,7 +150,10 @@ export const ProductTable: React.FC = () => {
       align: 'center',
       render: (_: any, record: Product) => (
         <Space size="small">
-          <Button type="primary" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          <Button type="primary" size="small" icon={<EyeOutlined />}/>
+          <Button size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} 
+            style={{ borderColor: '#eab308', color: '#eab308' }}
+          />
           <Popconfirm title="Are you sure to delete this product?" onConfirm={() => handleDelete(record.ID!)} okText="Yes" cancelText="No">
             <Button size="small" icon={<DeleteOutlined />} danger />
           </Popconfirm>
@@ -483,7 +486,7 @@ export const ProductTable: React.FC = () => {
           <Form.Item label="Product Image">
             <ImgCrop rotationSlider>
               <Upload
-                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                //action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import AppSider from "../layout/AppSider";
+import AppSider from "../components/AppSider";
 import { Button, Layout, Modal, Space, Form, Row, Card, Col, Avatar, Input, Upload, Steps, Menu, MenuProps, Descriptions, Grid, Image, Popconfirm } from "antd";
-import HeaderPage from "../layout/HeaderPage";
+import HeaderPage from "../components/HeaderPage";
 import { DeleteOutlined, DownOutlined, EditOutlined, EyeOutlined, PlusOutlined, SearchOutlined, ShopOutlined, UpOutlined, UserOutlined } from "@ant-design/icons";
 import { Supplier } from "../interfaces/allInterface";
 import ImgCrop from "antd-img-crop";

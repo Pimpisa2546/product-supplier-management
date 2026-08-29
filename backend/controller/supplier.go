@@ -74,6 +74,6 @@ func (ctrl *SupplierControll) UpdateSupplier(c *gin.Context) {
 func (ctrl *SupplierControll) GetSuppliersByID(c *gin.Context){
 	id := c.Param("id")
 	var suppliers []entity.Supplier
-	ctrl.DB.Find(&suppliers,id)
+	ctrl.DB.Preload("Product").Find(&suppliers,id)
 	c.JSON(http.StatusOK, suppliers)
 }

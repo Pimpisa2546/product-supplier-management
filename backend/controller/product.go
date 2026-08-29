@@ -71,3 +71,10 @@ func (ctrl *ProductControll) UpdateProduct(c *gin.Context) {
 	ctrl.DB.Preload("Supplier").Preload("Category").Preload("Hazard").Preload("Velocity").First(&updateProduct,updateProduct.ID)
 	c.JSON(http.StatusOK,updateProduct)
 }
+
+func (ctrl *ProductControll) GetProdutByID(c *gin.Context){
+	id := c.Param("id")
+	var product []entity.Product
+	ctrl.DB.Preload("Supplier").Preload("Category").Preload("Hazard").Preload("Velocity").Find(&product,id)
+	c.JSON(http.StatusOK, product)
+}

@@ -44,6 +44,7 @@ func main() {
 		api.POST("/products", productCtrl.CreateProduct)
 		api.DELETE("/products/:id", productCtrl.DeleteProduct)
 		api.PUT("/products/:id", productCtrl.UpdateProduct)
+		api.GET("/products/:id", productCtrl.GetProdutByID)
 
 		api.GET("/categories", categoryCtrl.GetCategories)
 		api.POST("/categories", categoryCtrl.CreateCategory)
