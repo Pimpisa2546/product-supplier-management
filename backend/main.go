@@ -29,7 +29,7 @@ func main() {
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
-			"https://product-supplier-management-three.vercel.app",
+			"http://localhost:5173","https://product-supplier-management-three.vercel.app",
 		},
 		AllowMethods: []string{"GET","POST","PUT","DELETE","OPTIONS","PATCH"},
 		AllowHeaders: []string{"Origin","Content-Type","Authorization"},
