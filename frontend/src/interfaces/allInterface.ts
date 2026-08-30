@@ -33,6 +33,7 @@ export interface Supplier{
 	ContactName:string;
 	ContactPhone:string;
 	ContactEmail:string;
+	Product?: Product[];
 }
 
 export interface Hazard{

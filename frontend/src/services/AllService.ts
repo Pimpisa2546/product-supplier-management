@@ -22,6 +22,11 @@ const UpdateProduct = async (id: number | string, productData: any) => {
     return res.data;
 };
 
+const GetProductByID = async (id: number | string) => {
+    const res = await api.get(`/products/${id}`);
+    return res.data;
+};
+
 //--------Supplier--------
 const AddNewSupplier = async (data:Supplier) => {
     const res = await api.post(`/suppliers`,data);
@@ -103,6 +108,7 @@ export {
     GetAllProduct,
     DeleteProduct,
     UpdateProduct,
+    GetProductByID,
 //Supplier
     AddNewSupplier,
     GetSupplier,

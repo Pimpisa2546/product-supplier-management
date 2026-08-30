@@ -1,37 +1,31 @@
 import React, { useState } from 'react';
-import { 
-  Table, Grid, Tag, Space, Button, Modal, Form, InputNumber, Input, 
-  Select, Popconfirm, Avatar, Upload, Layout, theme, Tabs, List, Typography, Card 
-} from 'antd';
-import { EditOutlined, DeleteOutlined, PlusOutlined, SettingOutlined, WarningOutlined, RocketOutlined, CheckOutlined, CloseOutlined, SearchOutlined, UpOutlined, DownOutlined, EyeOutlined } from '@ant-design/icons';
+import { Table, Grid, Tag, Space, Button, Input, Select, Popconfirm, Layout, theme, Card } from 'antd';
+import { EditOutlined, DeleteOutlined, PlusOutlined, SettingOutlined, SearchOutlined, UpOutlined, DownOutlined, EyeOutlined } from '@ant-design/icons';
 import { Category, Product } from '../interfaces/allInterface';
-import TextArea from 'antd/es/input/TextArea';
-import ImgCrop from 'antd-img-crop';
 import useProductManager from "../customLogic/productAndData";
 import { Content } from 'antd/es/layout/layout';
 import { AppSider } from '../components/AppSider';
 import "../page/CustomTable.css";
 import type { ColumnsType } from 'antd/es/table';
 import HeaderPage from '../components/HeaderPage';
+import ModalPreview from '../components/product/ModalPreview';
+import ModalAddEditProduct from '../components/product/ModalAddEdit';
+import ModalMaster from '../components/masterData/MasterData';
 
-const { Text } = Typography;
 const { useBreakpoint } = Grid;
 
 export const ProductTable: React.FC = () => {
   const {
-    onChange,
-    onPreview,
-    handleSaveProduct,
     handleDelete,
     handleCloseModal,
     handleEdit,
     openCreateModal,
     handleOpenMasterData,
     handleCloseMasterData,
-    handleDeleteCategory,
-    handleSaveCategory,
     handleSearch,
     handleResetSearch,
+    fetchData,
+    fetchMasterData,
 
     searchName,
     setSearchName,
@@ -42,7 +36,7 @@ export const ProductTable: React.FC = () => {
     selectedVelocity,
     setSelectedVelocity,
 
-    editProduct,
+    editingProduct,
     modalOpen,
     loading,
     modalMaster,
@@ -51,58 +45,26 @@ export const ProductTable: React.FC = () => {
     hazard,
     category,
     velocity,
-    fileList,
-
-    form,
   } = useProductManager();
 
   const screens = useBreakpoint();
-  const [activeMasterTab, setActiveMasterTab] = useState<string>('1');
 
-  const [editingKey, setEditingKey] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState<string>('');
-  const [newCatName, setNewCatName] = useState<string>('');
-
-  const startEditCategory = (record: Category) => {
-    setEditingKey(record.ID!);
-    setEditingName(record.Name || '');
-  };
-
-  const cancelEditCategory = () => {
-    setEditingKey(null);
-    setEditingName('');
-  };
-
-  const saveEditCategory = async (id: number) => {
-    if (!editingName.trim()) return;
-    await handleSaveCategory({ ID: id, Name: editingName });
-    cancelEditCategory();
-  };
-
-  const handleAddNewCategory = async () => {
-    if (!newCatName.trim()) return;
-    await handleSaveCategory({ Name: newCatName });
-    setNewCatName('');
-  };
-
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
 
+  const handleOpen = (id?: number) => {
+    if (!id) return;
+    setSelectedProductId(id);
+    setPreviewOpen(true);
+  };
+
+  const handleClosePreview = () => {
+    setPreviewOpen(false);
+    setSelectedProductId(null);
+  };
+
   const columns: ColumnsType<Product> = [
-    {
-      title: 'Image',
-      dataIndex: 'ImageURL',
-      key: 'ImageURL',
-      width: 90,
-      align: 'center',
-      render: (url: string) => (
-        <Avatar
-          shape="square"
-          size={50}
-          src={url || 'https://via.placeholder.com/40?text=No+Image'}
-        />
-      ),
-      fixed: screens.md ? "left" : undefined,
-    },
     {
       title: 'Name',
       dataIndex: 'Name',
@@ -133,25 +95,20 @@ export const ProductTable: React.FC = () => {
       key: 'Category',
       width: 160,
       align: 'center',
-      render: (cat: any) => cat?.Name || '-',
-    },
-    {
-      title: 'Supplier',
-      dataIndex: 'Supplier',
-      key: 'Supplier',
-      width: 180,
-      align: 'center',
-      render: (sup: any) => sup?.Name || '-',
+      render: (cat: Category) => cat?.Name || '-',
     },
     {
       title: 'Action',
       key: 'Action',
-      width: 100,
+      width: 120,
       align: 'center',
       render: (_: any, record: Product) => (
         <Space size="small">
-          <Button type="primary" size="small" icon={<EyeOutlined />}/>
-          <Button size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} 
+          <Button type="primary" size="small" icon={<EyeOutlined />} onClick={() => handleOpen(record.ID)}/>
+          <Button 
+            size="small" 
+            icon={<EditOutlined />} 
+            onClick={() => handleEdit(record)} 
             style={{ borderColor: '#eab308', color: '#eab308' }}
           />
           <Popconfirm title="Are you sure to delete this product?" onConfirm={() => handleDelete(record.ID!)} okText="Yes" cancelText="No">
@@ -163,156 +120,9 @@ export const ProductTable: React.FC = () => {
     },
   ];
 
-  const columnsMaster = [
-    {
-      title: 'Category Name',
-      dataIndex: 'Name',
-      key: 'Name',
-      render: (text: string, record: Category) => {
-        const isEditing = record.ID === editingKey;
-        return isEditing ? (
-          <Input
-            value={editingName}
-            onChange={(e) => setEditingName(e.target.value)}
-            onPressEnter={() => saveEditCategory(record.ID!)}
-            autoFocus
-            size="small"
-          />
-        ) : (
-          text
-        );
-      },
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      width: 120,
-      align: 'center' as const,
-      render: (_: unknown, record: Category) => {
-        const isEditing = record.ID === editingKey;
-        return isEditing ? (
-          <Space size="small">
-            <Button
-              type="primary"
-              icon={<CheckOutlined />}
-              size="small"
-              onClick={() => saveEditCategory(record.ID!)}
-            />
-            <Button
-              icon={<CloseOutlined />}
-              size="small"
-              onClick={cancelEditCategory}
-            />
-          </Space>
-        ) : (
-          <Space size="small">
-            <Button
-              type="text"
-              icon={<EditOutlined />}
-              size="small"
-              onClick={() => startEditCategory(record)}
-            />
-            <Popconfirm
-              title="Are you sure to delete this category?"
-              onConfirm={() => handleDeleteCategory(record.ID!)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button size="small" icon={<DeleteOutlined />} danger />
-            </Popconfirm>
-          </Space>
-        );
-      },
-    },
-  ];
-
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
-  const masterTabItems = [
-    {
-      key: '1',
-      label: 'Category',
-      children: (
-        <div style={{ paddingTop: '8px' }}>
-          <Space style={{ marginBottom: 12, width: '100%', justifyContent: 'center' }}>
-            <Input
-              placeholder="Enter new category name..."
-              value={newCatName}
-              onChange={(e) => setNewCatName(e.target.value)}
-              onPressEnter={handleAddNewCategory}
-              style={{ width: '300px' }}
-            />
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleAddNewCategory}
-            >
-              Add
-            </Button>
-          </Space>
-          <Table
-            dataSource={category}
-            rowKey="ID"
-            pagination={{ pageSize: 5 }}
-            size="small"
-            columns={columnsMaster}
-          />
-        </div>
-      ),
-    },
-    {
-      key: '2',
-      label: 'Hazard Level',
-      children: (
-        <div style={{ paddingTop: '8px' }}>
-          <Text type="secondary" style={{ display: 'block', marginBottom: 12 }}>
-            <WarningOutlined style={{ color: '#faad14', marginRight: 6 }} />
-            Static Master Data (Referenced by risk standard, read-only)
-          </Text>
-          <List
-            size="small"
-            bordered
-            dataSource={hazard}
-            renderItem={(item: any) => (
-              <List.Item key={item.ID}>
-                <Space>
-                  <Tag color="volcano">{item.Code || item.ID}</Tag>
-                  <Text>{item.Name}</Text>
-                </Space>
-              </List.Item>
-            )}
-          />
-        </div>
-      ),
-    },
-    {
-      key: '3',
-      label: 'Velocity Rate',
-      children: (
-        <div style={{ paddingTop: '8px' }}>
-          <Text type="secondary" style={{ display: 'block', marginBottom: 12 }}>
-            <RocketOutlined style={{ color: '#1890ff', marginRight: 6 }} />
-            Static Master Data (ABC Analysis inventory turnover criteria)
-          </Text>
-          <List
-            size="small"
-            bordered
-            dataSource={velocity}
-            renderItem={(item: any) => (
-              <List.Item key={item.ID}>
-                <Space>
-                  <Tag color="blue">{item.Code || item.ID}</Tag>
-                  <Text>{item.Name}</Text>
-                </Space>
-              </List.Item>
-            )}
-          />
-        </div>
-      ),
-    },
-  ];
 
   return (
     <>
@@ -464,92 +274,31 @@ export const ProductTable: React.FC = () => {
         </Layout>
       </Layout>
 
-      <Modal
-        title={editProduct ? 'Edit Product' : 'Add Product'}
+      <ModalAddEditProduct
         open={modalOpen}
-        onCancel={handleCloseModal}
-        centered
-        footer={[
-          <Button key="cancel" onClick={handleCloseModal}>Cancel</Button>,
-          <Button key="submit" type="primary" onClick={() => { form.submit(); }}>
-            {editProduct ? 'Update Product' : 'Add Product'}
-          </Button>
-        ]}
-      >
-        <Form form={form} layout="vertical" onFinish={handleSaveProduct}>
-          <Form.Item name="imageURL" hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name="productName" label="Product Name" rules={[{ required: true, message: 'Please input the product name!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Product Image">
-            <ImgCrop rotationSlider>
-              <Upload
-                //action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                listType="picture-card"
-                fileList={fileList}
-                onChange={onChange}
-                onPreview={onPreview}
-                beforeUpload={() => false}
-              >
-                {fileList.length < 1 && (
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                )}
-              </Upload>
-            </ImgCrop>
-          </Form.Item>
-          <Form.Item name="detail" label="Detail">
-            <TextArea rows={3} />
-          </Form.Item>
-          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please input the price!' }]}>
-            <InputNumber style={{ width: '100%' }} min={0} />
-          </Form.Item>
-          <Form.Item name="stock" label="Stock" rules={[{ required: true, message: 'Please input the stock!' }]}>
-            <InputNumber style={{ width: '100%' }} min={0} />
-          </Form.Item>
-          <Form.Item name="SupplierID" label="Supplier" rules={[{ required: true, message: 'Please select a supplier!' }]}>
-            <Select placeholder="Select Supplier">
-              {supplier.map((c) => (<Select.Option key={c.ID} value={c.ID}>{c.Name}</Select.Option>))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="CategoryID" label="Category" rules={[{ required: true, message: 'Please select a category!' }]}>
-            <Select placeholder="Select Category">
-              {category.map((c) => (<Select.Option key={c.ID} value={c.ID}>{c.Name}</Select.Option>))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="HazardID" label="Hazard Level" rules={[{ required: true, message: 'Please select a hazard level!' }]}>
-            <Select placeholder="Select Hazard Level">
-              {hazard.map((c) => (<Select.Option key={c.ID} value={c.ID}>{c.Name}</Select.Option>))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="VelocityID" label="Velocity Rate" rules={[{ required: true, message: 'Please select a velocity rate!' }]}>
-            <Select placeholder="Select Velocity Rate">
-              {velocity.map((c) => (<Select.Option key={c.ID} value={c.ID}>{c.Name}</Select.Option>))}
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      <Modal
-        title="Master Data Management"
+        editingProduct={editingProduct}
+        supplierList={supplier}
+        categoryList={category}
+        hazardList={hazard}
+        velocityList={velocity}
+        onClose={handleCloseModal}
+        onSuccess={fetchData}
+      />
+      
+      <ModalMaster
         open={modalMaster}
-        onCancel={handleCloseMasterData}
-        footer={[
-          <Button key="close" onClick={handleCloseMasterData}>Close</Button>
-        ]}
-        width={650}
-        centered
-      >
-        <Tabs
-          activeKey={activeMasterTab}
-          onChange={setActiveMasterTab}
-          items={masterTabItems}
-        />
-      </Modal>
+        categoryList={category}
+        hazardList={hazard}
+        velocityList={velocity}
+        onClose={handleCloseMasterData}
+        onSuccess={fetchMasterData}
+      />
+
+      <ModalPreview 
+        open={previewOpen}
+        productId={selectedProductId}
+        onClose={handleClosePreview}
+      />
     </>
   );
 };

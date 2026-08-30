@@ -17,9 +17,18 @@ export const handleImagePreview = async (file: UploadFile) => {
     src = await getBase64(file.originFileObj as FileType);
   }
   if (src) {
-    const image = new Image();
-    image.src = src;
     const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    if (imgWindow) {
+      imgWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head><title>Image Preview</title></head>
+          <body style="margin:0; display:flex; justify-content:center; align-items:center; background:#000; min-height:100vh;">
+            <img src="${src}" style="max-width:100%; max-height:100vh; object-fit:contain;" />
+          </body>
+        </html>
+      `);
+      imgWindow.document.close();
+    }
   }
 };

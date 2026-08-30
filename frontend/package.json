@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^6.5.3",
+    "antd": "^6.6.2",
     "antd-img-crop": "^4.30.0",
     "axios": "^1.19.0",
     "jwt-decode": "^4.0.0",

@@ -2,7 +2,7 @@ import { Menu, MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
 import React, { useState } from "react";
 import { AppstoreOutlined, ShoppingOutlined, } from '@ant-design/icons';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AppSider: React.FC =() => {
     const [collapsed,setCollapsed] = useState(false);

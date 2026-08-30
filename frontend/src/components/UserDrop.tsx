@@ -49,11 +49,13 @@ export const UserDropdown: React.FC = () => {
       key: 'profile',
       label: 'Profile',
       icon: <UserOutlined />,
+      disabled:true,
     },
     {
       key: 'settings',
       label: 'Settings',
       icon: <SettingOutlined />,
+      disabled:true,
     },
     {
       type: 'divider',
