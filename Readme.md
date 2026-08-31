@@ -29,7 +29,7 @@ A simple, fast, and secure full-stack web application designed for managing inve
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 * **Frontend:** React (TypeScript), Vite, Ant Design
 * **Backend:** Go (Golang), Gin Framework, GORM
