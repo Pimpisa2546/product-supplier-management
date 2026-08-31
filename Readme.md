@@ -42,7 +42,7 @@ A simple, fast, and secure full-stack web application designed for managing inve
 
 ### 1. Run the Backend
 cd backend
-*go run main.go
+go run main.go
 
 ### 2. Run the Frontend
 cd frontend
