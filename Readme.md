@@ -29,7 +29,7 @@ A simple, fast, and secure full-stack web application designed for managing inve
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 * **Frontend:** React (TypeScript), Vite, Ant Design
 * **Backend:** Go (Golang), Gin Framework, GORM
@@ -41,10 +41,10 @@ A simple, fast, and secure full-stack web application designed for managing inve
 ## Local Setup Guide
 
 ### 1. Run the Backend
-cd backend
-go run main.go
+*cd backend
+*go run main.go
 
 ### 2. Run the Frontend
-cd frontend
-npm install
-npm run dev
+*cd frontend
+*npm install
+*npm run dev
