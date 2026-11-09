@@ -4,6 +4,7 @@ import ProductTable from "./page/ProductTable";
 import SupplierPage from "./page/Supplier";
 import Login from "./page/login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { TransectionPage } from "./page/Trasaction";
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/products" element={<ProductTable />}></Route>
           <Route path="/suppliers" element={<SupplierPage />}></Route>
+          <Route path="/transections" element={<TransectionPage />}></Route>
         </Route>
         <Route path="*" element={<Login />} />
       </Routes>

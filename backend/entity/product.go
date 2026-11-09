@@ -6,22 +6,29 @@ import (
 
 type Product struct {
 	gorm.Model
-	Name       string  `valid:"required~Product Name is required" gorm:"not null"`
-	Detail     string
-	ImageURL   string
-	Price      float64 `valid:"required~Product Price must be greater than 0" gorm:"not null"`
-	Stock      int
-	
+	Name     string `valid:"required~Product Name is required" gorm:"not null"`
+	Detail   string
+	ImageURL string
+	Price    float64 `valid:"required~Product Price must be greater than 0" gorm:"not null"`
 
-	SupplierID uint    `valid:"required~Supplier is required"`
-	CategoryID uint    `valid:"required~Category is required"`
-	HazardID   uint    `valid:"required~Hazard is required"`
-	VelocityID uint    `valid:"required~Velocity is required"`
+	SKU            string
+	Width_Product  float64
+	Height_Product float64
+	Length_Product float64
+	Weight_Product float64
+	Color_Product  string
+
+	SupplierID uint `valid:"required~Supplier is required"`
+	CategoryID uint `valid:"required~Category is required"`
+	HazardID   uint `valid:"required~Hazard is required"`
+	VelocityID uint `valid:"required~Velocity is required"`
 	UserID     uint
-	
-	User       User     `valid:"-" gorm:"foreignKey:UserID"`
-	Supplier   Supplier `valid:"-" gorm:"foreignKey:SupplierID"`
-	Category   Category `valid:"-" gorm:"foreignKey:CategoryID"`
-	Hazard     Hazard   `valid:"-" gorm:"foreignKey:HazardID"`
-	Velocity   Velocity `valid:"-" gorm:"foreignKey:VelocityID"`
+
+	User     User     `valid:"-" gorm:"foreignKey:UserID"`
+	Supplier Supplier `valid:"-" gorm:"foreignKey:SupplierID"`
+	Category Category `valid:"-" gorm:"foreignKey:CategoryID"`
+	Hazard   Hazard   `valid:"-" gorm:"foreignKey:HazardID"`
+	Velocity Velocity `valid:"-" gorm:"foreignKey:VelocityID"`
+
+	Transaction []Transaction `gorm:"foreignKey:ProductID"`
 }

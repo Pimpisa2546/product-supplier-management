@@ -7,16 +7,21 @@ import (
 	"backend/middleware"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	loc, err := time.LoadLocation("Asia/Bangkok")
+	if err == nil {
+		time.Local = loc
+	}
 	config.ConnectionDB()
 	config.SetupDatabase()
 	db := config.DB()
 
 	productCtrl := controller.NewProductControll(db)
+	transactionCtrl := controller.NewTransactionControll(db)
 	categoryCtrl := controller.NewCategory(db)
 	supplierCtrl := controller.NewSupplier(db)
 	hazardCtrl := controller.NewHazard(db)
@@ -24,17 +29,16 @@ func main() {
 	userCtrl := controller.NewUser(db)
 	roleCtrl := controller.NewRole(db)
 
-
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:5173","https://product-supplier-management-three.vercel.app",
 		},
-		AllowMethods: []string{"GET","POST","PUT","DELETE","OPTIONS","PATCH"},
-		AllowHeaders: []string{"Origin","Content-Type","Authorization"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
 	r.POST("/login", controller.Login)
 	api := r.Group("/")
@@ -46,6 +50,10 @@ func main() {
 		api.PUT("/products/:id", productCtrl.UpdateProduct)
 		api.GET("/products/:id", productCtrl.GetProdutByID)
 
+		api.GET("/transactions", transactionCtrl.GetTransaction)
+		api.GET("/transactions/today", transactionCtrl.GetSelecteDateTransaction)
+		api.POST("/transactions", transactionCtrl.CreateTransaction)
+
 		api.GET("/categories", categoryCtrl.GetCategories)
 		api.POST("/categories", categoryCtrl.CreateCategory)
 		api.DELETE("/categories/:id", categoryCtrl.DeleteCategory)
@@ -54,8 +62,8 @@ func main() {
 		api.GET("/suppliers", supplierCtrl.GetSuppliers)
 		api.POST("/suppliers", supplierCtrl.CreateSupplier)
 		api.DELETE("/suppliers/:id", supplierCtrl.DeleteSupplier)
-		api.PUT("/suppliers/:id",supplierCtrl.UpdateSupplier)
-		api.GET("/suppliers/:id",supplierCtrl.GetSuppliersByID)
+		api.PUT("/suppliers/:id", supplierCtrl.UpdateSupplier)
+		api.GET("/suppliers/:id", supplierCtrl.GetSuppliersByID)
 
 		api.GET("/hazards", hazardCtrl.GetHazards)
 		api.POST("/hazards", hazardCtrl.CreateHazard)

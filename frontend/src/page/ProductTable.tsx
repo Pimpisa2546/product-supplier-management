@@ -24,8 +24,11 @@ export const ProductTable: React.FC = () => {
     handleCloseMasterData,
     handleSearch,
     handleResetSearch,
+    handleTableChange,
     fetchData,
     fetchMasterData,
+    stockProduct,
+    pagination,
 
     searchName,
     setSearchName,
@@ -40,7 +43,6 @@ export const ProductTable: React.FC = () => {
     modalOpen,
     loading,
     modalMaster,
-    products,
     supplier,
     hazard,
     category,
@@ -67,11 +69,28 @@ export const ProductTable: React.FC = () => {
   const columns: ColumnsType<Product> = [
     {
       title: 'Name',
-      dataIndex: 'Name',
       key: 'Name',
       width: 200,
       ellipsis: true,
       align: 'center',
+      render: (_: any, record: Product) => (
+              <Space align="center" size={10}>
+                <img
+                  src={record.ImageURL || ''}
+                  alt={record.Name}
+                  width={45}
+                  height={45}
+                  style={{ objectFit: 'cover', borderRadius: '4px' }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+                <span>
+                  {record.Name || '-'}
+                </span>
+              </Space>
+      
+            ),
     },
     {
       title: 'Price',
@@ -104,11 +123,11 @@ export const ProductTable: React.FC = () => {
       align: 'center',
       render: (_: any, record: Product) => (
         <Space size="small">
-          <Button type="primary" size="small" icon={<EyeOutlined />} onClick={() => handleOpen(record.ID)}/>
-          <Button 
-            size="small" 
-            icon={<EditOutlined />} 
-            onClick={() => handleEdit(record)} 
+          <Button type="primary" size="small" icon={<EyeOutlined />} onClick={() => handleOpen(record.ID)} />
+          <Button
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
             style={{ borderColor: '#eab308', color: '#eab308' }}
           />
           <Popconfirm title="Are you sure to delete this product?" onConfirm={() => handleDelete(record.ID!)} okText="Yes" cancelText="No">
@@ -260,14 +279,19 @@ export const ProductTable: React.FC = () => {
               <Table
                 className="customTable"
                 columns={columns}
-                dataSource={products}
+                dataSource={stockProduct}
                 rowKey="ID"
                 loading={loading}
                 scroll={{ x: 930 }}
                 pagination={{
-                  pageSize: 5,
+                  current: pagination.current,
+                  pageSize: pagination.pageSize,
+                  total: pagination.total,
+                  showSizeChanger: true,
+                  pageSizeOptions: ['5', '10', '20', '50'],
                   showTotal: (total) => `Total ${total} items`,
                 }}
+                onChange={handleTableChange}
               />
             </div>
           </Content>
@@ -284,7 +308,7 @@ export const ProductTable: React.FC = () => {
         onClose={handleCloseModal}
         onSuccess={fetchData}
       />
-      
+
       <ModalMaster
         open={modalMaster}
         categoryList={category}
@@ -294,7 +318,7 @@ export const ProductTable: React.FC = () => {
         onSuccess={fetchMasterData}
       />
 
-      <ModalPreview 
+      <ModalPreview
         open={previewOpen}
         productId={selectedProductId}
         onClose={handleClosePreview}

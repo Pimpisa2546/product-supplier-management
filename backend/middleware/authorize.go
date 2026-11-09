@@ -2,46 +2,54 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("my-secret-key")
+var jwtSecret = []byte(getJwtSecret())
 
-func AuthenticateJWT() gin.HandlerFunc{
-	return func(c *gin.Context){
+func getJwtSecret() string {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return "fallback-secret-key"
+	}
+	return secret
+}
+
+func AuthenticateJWT() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
-		if authHeader == ""{
-			c.JSON(http.StatusUnauthorized,gin.H{"error":"Missing Token"})
+		if authHeader == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing Token"})
 			c.Abort()
 			return
 		}
 
-		tokenString := strings.TrimPrefix(authHeader,"Bearer ")
+		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
-		token,err := jwt.Parse(tokenString,func(token *jwt.Token)(interface{},error){
-			return jwtSecret,nil
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return jwtSecret, nil
 		})
 
-		if err != nil || !token.Valid{
-			c.JSON(http.StatusUnauthorized,gin.H{"error" : "Invalid or Expired Token"})
+		if err != nil || !token.Valid {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or Expired Token"})
 			c.Abort()
 			return
 		}
-		if claims,ok := token.Claims.(jwt.MapClaims); ok{
+		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			roleID := uint(claims["role_id"].(float64))
-			c.Set("roleID",roleID)
+			c.Set("roleID", roleID)
 		}
 		c.Next()
-
 	}
 }
 
-func AuthorizeRoles(allowedRoles ...uint) gin.HandlerFunc{
-	return func(c *gin.Context){
-		roleIDValue,exists := c.Get("roleID")
+func AuthorizeRoles(allowedRoles ...uint) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		roleIDValue, exists := c.Get("roleID")
 		if !exists {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Role not found"})
 			c.Abort()
